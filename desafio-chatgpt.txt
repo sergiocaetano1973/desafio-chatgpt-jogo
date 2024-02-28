@@ -1,0 +1,171 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Definindo as cartas do baralho
+typedef enum {
+    ESPADAS,
+    COPAS,
+    OUROS,
+    PAUS
+} Naipe;
+
+typedef enum {
+    AS,
+    DOIS,
+    TRES,
+    QUATRO,
+    CINCO,
+    SEIS,
+    SETE,
+    OITO,
+    NOVE,
+    DEZ,
+    VALETE,
+    DAMA,
+    REI
+} Valor;
+
+typedef struct {
+    Naipe naipe;
+    Valor valor;
+} Carta;
+
+// Função para imprimir uma carta
+void imprimirCarta(Carta carta) {
+    char *naipeStr;
+    char *valorStr;
+
+    switch (carta.naipe) {
+        case ESPADAS:
+            naipeStr = "Espadas";
+            break;
+        case COPAS:
+            naipeStr = "Copas";
+            break;
+        case OUROS:
+            naipeStr = "Ouros";
+            break;
+        case PAUS:
+            naipeStr = "Paus";
+            break;
+    }
+
+    switch (carta.valor) {
+        case AS:
+            valorStr = "As";
+            break;
+        case DOIS:
+            valorStr = "Dois";
+            break;
+        case TRES:
+            valorStr = "Tres";
+            break;
+        case QUATRO:
+            valorStr = "Quatro";
+            break;
+        case CINCO:
+            valorStr = "Cinco";
+            break;
+        case SEIS:
+            valorStr = "Seis";
+            break;
+        case SETE:
+            valorStr = "Sete";
+            break;
+        case OITO:
+            valorStr = "Oito";
+            break;
+        case NOVE:
+            valorStr = "Nove";
+            break;
+        case DEZ:
+            valorStr = "Dez";
+            break;
+        case VALETE:
+            valorStr = "Valete";
+            break;
+        case DAMA:
+            valorStr = "Dama";
+            break;
+        case REI:
+            valorStr = "Rei";
+            break;
+    }
+
+    printf("%s de %s\n", valorStr, naipeStr);
+}
+
+// Função para criar um baralho
+Carta* criarBaralho() {
+    Carta *baralho = (Carta*)malloc(52 * sizeof(Carta));
+    int i, j;
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 13; j++) {
+            baralho[i * 13 + j].naipe = i;
+            baralho[i * 13 + j].valor = j;
+        }
+    }
+    return baralho;
+}
+
+// Função para embaralhar o baralho
+void embaralharBaralho(Carta *baralho) {
+    srand(time(NULL));
+    int i, j;
+    Carta temp;
+    for (i = 0; i < 52; i++) {
+        j = rand() % 52;
+        temp = baralho[i];
+        baralho[i] = baralho[j];
+        baralho[j] = temp;
+    }
+}
+
+// Função para distribuir cartas aos jogadores
+void distribuirCartas(Carta *baralho, Carta *maoJogador, Carta *maoComputador1, Carta *maoComputador2, Carta *maoComputador3) {
+    int i;
+    for (i = 0; i < 3; i++) {
+        maoJogador[i] = baralho[i];
+        maoComputador1[i] = baralho[i + 3];
+        maoComputador2[i] = baralho[i + 6];
+        maoComputador3[i] = baralho[i + 9];
+    }
+}
+
+// Função principal
+int main() {
+    Carta *baralho = criarBaralho();
+    embaralharBaralho(baralho);
+
+    Carta maoJogador[3];
+    Carta maoComputador1[3];
+    Carta maoComputador2[3];
+    Carta maoComputador3[3];
+
+    distribuirCartas(baralho, maoJogador, maoComputador1, maoComputador2, maoComputador3);
+
+    printf("Mao do jogador:\n");
+    for (int i = 0; i < 3; i++) {
+        imprimirCarta(maoJogador[i]);
+    }
+
+    printf("\nMao do computador 1:\n");
+    for (int i = 0; i < 3; i++) {
+        imprimirCarta(maoComputador1[i]);
+    }
+
+    printf("\nMao do computador 2:\n");
+    for (int i = 0; i < 3; i++) {
+        imprimirCarta(maoComputador2[i]);
+    }
+
+    printf("\nMao do computador 3:\n");
+    for (int i = 0; i < 3; i++) {
+        imprimirCarta(maoComputador3[i]);
+    }
+
+    free(baralho);
+
+    return 0;
+}
